@@ -4,10 +4,14 @@ import sys
 
 class login_directory:
     def __init__(self):
-      self.directory = {}
+      self.__directory = {}
+
+    @property
+    def directory(self):
+        raise PermissionError("Direct access to user directory is not allowed.")
 
     def add_user(self):
-      if self.directory:
+      if self.__directory:
         Main=self.authentication()
         if Main==True:
           print("Enter username:")
@@ -23,7 +27,7 @@ class login_directory:
             else:
               break
           hashed_password = hashlib.sha256(password.encode()).hexdigest()
-          self.directory[username] = hashed_password
+          self.__directory[username] = hashed_password
           print("User added successfully.")
           print()
         else:
@@ -42,7 +46,7 @@ class login_directory:
             else:
               break
           hashed_password = hashlib.sha256(password.encode()).hexdigest()
-          self.directory[username] = hashed_password
+          self.__directory[username] = hashed_password
           print("User added successfully.")
           print()
   
@@ -51,7 +55,7 @@ class login_directory:
       while no>0:
         print("Enter UserName:")
         username =input().strip()
-        if username not in self.directory:
+        if username not in self.__directory:
           print("Username not found.")
           no-=1
           print(f"You have {no} attempts left.")
@@ -59,7 +63,7 @@ class login_directory:
         print("Enter password:-")
         password=getpass.getpass().strip()
         login_hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        if self.directory[username]==login_hashed_password:
+        if self.__directory[username]==login_hashed_password:
           print("Authentication successful.")
           return True
         else:
@@ -71,11 +75,11 @@ class login_directory:
 
 
     def view_users(self):
-      if self.directory:
+      if self.__directory:
         Main=self.authentication()
         if Main==True:
           print("Registered Users:")
-          for user in self.directory:
+          for user in self.__directory:
             print(user)
         else:
           print("authentication failed. Cannot view users.")
@@ -84,16 +88,16 @@ class login_directory:
           
       
     def delete_user(self):
-      if self.directory:
+      if self.__directory:
         Main=self.authentication()
         if Main==True:
           print("Enter username to delete:")
           username =input().strip()
-          if username in self.directory:
+          if username in self.__directory:
             print("Are you sure you want to delete this user? (yes/no)")
             confirmation=input().strip().lower()
             if confirmation == 'yes':
-              del self.directory[username]
+              del self.__directory[username]
               print("User deleted successfully.")
               return
             else:
@@ -108,12 +112,12 @@ class login_directory:
         print("No users registered.")
 
     def change_password(self):
-      if self.directory:
+      if self.__directory:
         Main=self.authentication()
         if Main==True:
           print("Enter username to change password:")
           username=input().strip()
-          if username in self.directory:
+          if username in self.__directory:
             print("Enter new password:-")
             password=getpass.getpass().strip()
             print("Re-enter new password:-")
@@ -122,7 +126,7 @@ class login_directory:
               print("Passwords do not match. Password not changed.")
               return
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
-            self.directory[username] = hashed_password
+            self.__directory[username] = hashed_password
             print("Password changed successfully.")
             return
           else:
@@ -135,6 +139,7 @@ class login_directory:
 
 if __name__ == "__main__":
     ld = login_directory()
+    print(ld.directory)
     while True:
       print("1. Add Users")
       print("2. view Users")
