@@ -139,7 +139,6 @@ class login_directory:
 
 if __name__ == "__main__":
     ld = login_directory()
-    print(ld.directory)
     while True:
       print("1. Add Users")
       print("2. view Users")
